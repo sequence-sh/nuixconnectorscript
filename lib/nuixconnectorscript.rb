@@ -10,8 +10,6 @@ module NuixConnectorScript
   LOG_SEVERITY  = :info
   WAIT_TIMEOUT  = 30 #30 Seconds
 
-  $utilities = utilities if defined? utilities
-
   #STDIN.sync   = true
   #STDOUT.sync  = true
   #STDERR.sync  = true
@@ -168,5 +166,6 @@ end
 
 if $0 == __FILE__
   include NuixConnectorScript
+  $utilities = utilities if defined? utilities
   NuixConnectorScript.listen
 end
