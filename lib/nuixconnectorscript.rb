@@ -49,7 +49,7 @@ module NuixConnectorScript
       :stackTrace => stack
     }}
     log(message, severity: :error, timestamp: timestamp, stack: stack)
-    STDERR.puts JSON.generate(body)
+    $stderr.puts JSON.generate(body)
     exit(1) if terminating
   end
 
