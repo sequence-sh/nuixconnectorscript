@@ -10,6 +10,8 @@ module NuixConnectorScript
   LOG_SEVERITY  = :info
   WAIT_TIMEOUT  = 30 #30 Seconds
 
+  $utilities = utilities if defined? utilities
+
   #STDIN.sync   = true
   #STDOUT.sync  = true
   #STDERR.sync  = true
@@ -83,8 +85,6 @@ module NuixConnectorScript
 
     log "Starting"
 
-    $utilities = utilities if defined? utilities
-
     functions = {}
 
     loop do
@@ -109,10 +109,6 @@ module NuixConnectorScript
       args = json['args']
       fdef = json['def']
       is_stream = json['isstream']
-
-      #puts cmd
-      #puts args.inspect
-      #puts fdef
 
       unless fdef.nil?
         op = functions.key?(cmd) ? 'Replacing' : 'Adding new'
@@ -154,11 +150,10 @@ module NuixConnectorScript
         }
       end
 
-      # TODO: rescue
       begin
         result = send functions[cmd][:fdef], args
         dataInput.join(WAIT_TIMEOUT) if is_stream
-        return_result(result) # unless result.nil?
+        return_result(result)
       rescue => ex
         write_error("Could not execute #{cmd}: #{ex}", stack: ex.backtrace.join("\n"), terminating: true)
       end
