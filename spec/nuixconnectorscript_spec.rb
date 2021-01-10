@@ -2,6 +2,8 @@ require 'nuixconnectorscript'
 
 include NuixConnectorScript
 
+################################################################################
+
 describe 'log' do
 
   it 'logs a message with info severity by default' do
@@ -40,6 +42,8 @@ describe 'log' do
 
 end
 
+################################################################################
+
 describe 'return_result' do
   it 'outputs result json to stdout' do
     expected = Regexp.escape('{"result":{"data":"message!"}}')
@@ -48,6 +52,8 @@ describe 'return_result' do
     end.to output(/^#{expected}\r?\n$/).to_stdout
   end
 end
+
+################################################################################
 
 describe 'write_error' do
 
@@ -107,12 +113,42 @@ describe 'write_error' do
       end.to output(/^#{expected}\r?\n$/).to_stderr
     end
 
+  end
+
+  
+  context 'terminating' do
+
+    before(:all) do
+      @orig_err = $stderr
+      @orig_out = $stdout
+      $stderr = StringIO.new
+      $stdout = StringIO.new
+    end
+
+    after(:all) do
+      $stderr = @orig_err
+      $stdout = @orig_out
+    end
+
     it 'exits when the error is terminating' do
       expect do
-        write_error("error!", terminating: true)
+        write_error("terminating!", terminating: true)
       end.to raise_error(SystemExit)
     end
 
   end
   
 end
+
+################################################################################
+
+describe 'return_entity' do
+  it 'outputs entity json to stdout' do
+    expected = Regexp.escape('{"entity":{"prop1":"value","prop2":1}}')
+    expect do
+      return_entity({ prop1: 'value', prop2: 1 })
+    end.to output(/^#{expected}\r?\n$/).to_stdout
+  end
+end
+
+################################################################################
