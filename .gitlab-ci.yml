@@ -19,8 +19,8 @@ cache:
     - vendor/ruby
 
 before_script:
-  - ruby -v # Print out ruby version for debugging
-  - bundle install -j $(nproc) --path vendor # Install dependencies into ./vendor/ruby
+  - ruby -v
+  - bundle install -j $(nproc) --path vendor
 
 # rubocop:
 #   stage: test
@@ -30,7 +30,7 @@ before_script:
 rspec:
   stage: test
   script:
-    - rspec spec
+    - bundle exec rake spec
 
 code_quality:
   stage: quality
