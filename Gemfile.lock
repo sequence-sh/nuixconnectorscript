@@ -32,6 +32,7 @@ PLATFORMS
 DEPENDENCIES
   rake
   rspec
+  rspec-mocks
   simplecov
   simplecov-cobertura
 
