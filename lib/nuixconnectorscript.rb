@@ -33,12 +33,12 @@ module NuixConnectorScript
       :time => timestamp,
       :stackTrace => stack
     }}
-    puts JSON.generate(body)
+    $stdout.puts JSON.generate(body)
   end
 
   def return_result(result)
       body = { :result => { :data => result } }
-      puts JSON.generate(body)
+      $stdout.puts JSON.generate(body)
   end
 
   def write_error(message, timestamp: Time.now, location: '', stack: '', terminating: false)
@@ -55,7 +55,7 @@ module NuixConnectorScript
 
   def return_entity(props)
       body = { :entity => props }
-      puts JSON.generate(body)
+      $stdout.puts JSON.generate(body)
   end
 
   ################################################################################
@@ -96,7 +96,7 @@ module NuixConnectorScript
       begin
         json = JSON.parse(input)
       rescue JSON::ParserError
-        write_error("Could not parse input: #{input}")
+        write_error("Could not parse JSON: #{input}")
         next
       end
 
@@ -149,7 +149,7 @@ module NuixConnectorScript
       end
 
       begin
-        result = send functions[cmd][:fdef], args
+        result = args.nil? ? send(functions[cmd][:fdef]) : send(functions[cmd][:fdef], args)
         dataInput.join(WAIT_TIMEOUT) if is_stream
         return_result(result)
       rescue => ex
