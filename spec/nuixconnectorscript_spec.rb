@@ -1,5 +1,7 @@
 require 'simplecov'
-SimpleCov.start
+SimpleCov.start do
+  add_filter '/vendor/'
+end
 require 'simplecov-cobertura'
 SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter
 
@@ -118,7 +120,6 @@ describe 'write_error' do
     end
 
   end
-
   
   context 'terminating' do
 
@@ -153,6 +154,45 @@ describe 'return_entity' do
       return_entity({ prop1: 'value', prop2: 1 })
     end.to output(/^#{expected}\r?\n$/).to_stdout
   end
+end
+
+################################################################################
+
+def run_listen(send = [])
+  thread = Thread.new do
+    listen
+  end
+  sleep(0.1)
+  send.each { |msg| puts msg }
+  thread.join
+end
+
+describe 'listen' do
+
+  DONE_JSON = '{"cmd":"done"}'
+  DATA_JSON = '{"cmd":"datastream"}'
+
+  LOG_START = '\{"log":\{"severity":"info","message":"Starting","time":".+","stackTrace":""\}\}\r?\n'
+  LOG_END   = '\{"log":\{"severity":"info","message":"Finished","time":".+","stackTrace":""\}\}\r?\n'
+
+  it 'returns when END_CMD is received' do
+    $VERBOSE = nil
+    NuixConnectorScript::END_CMD = 'end'
+    $VERBOSE = false
+    allow($stdin).to receive(:gets) { '{"cmd":"end"}' }
+    th = Thread.new {listen}
+    result = nil
+    expect($stdout).to receive(:puts).twice
+    expect{result = th.join(1)}.not_to raise_error
+    expect(result).to_not be_nil
+  end
+
+  it 'logs start and end message' do
+    allow($stdin).to receive(:gets) { '{"cmd":"end"}' }
+    expected = LOG_START + LOG_END
+    expect{run_listen}.to output(/^#{expected}$/).to_stdout
+  end
+
 end
 
 ################################################################################
