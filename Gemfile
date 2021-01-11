@@ -1,3 +1,5 @@
 source 'https://rubygems.org'
-gem 'rspec'
+gem 'simplecov', require: false, group: :test
+gem 'simplecov-cobertura', require: false, group: :test
 gem 'rake'
+gem 'rspec'

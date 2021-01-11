@@ -1,5 +1,9 @@
-require 'nuixconnectorscript'
+require 'simplecov'
+SimpleCov.start
+require 'simplecov-cobertura'
+SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter
 
+require 'nuixconnectorscript'
 include NuixConnectorScript
 
 ################################################################################

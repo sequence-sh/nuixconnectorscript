@@ -31,6 +31,12 @@ rspec:
   stage: test
   script:
     - bundle exec rake spec
+  coverage: /LOC \((\d+.?\d*)%\) covered/
+  artifacts:
+    paths:
+      - coverage/
+    reports:
+      cobertura: coverage/coverage.xml
 
 code_quality:
   stage: quality
