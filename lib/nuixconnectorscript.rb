@@ -89,7 +89,7 @@ module NuixConnectorScript
 
       log("reader: waiting for input", severity: :debug)
 
-      input = gets.chomp
+      input = $stdin.gets.chomp
 
       log("reader: received input", severity: :debug)
 
@@ -131,10 +131,10 @@ module NuixConnectorScript
         else
           args['datastream'] = datastream
         end
-        dataInput = Thread.new {
+        dataInput = Thread.new do
           datastream_end = nil
           loop do
-            data_in = gets.chomp
+            data_in = $stdin.gets.chomp
             if datastream_end.nil?
               datastream_end = data_in
             elsif datastream_end.eql? data_in
@@ -145,7 +145,7 @@ module NuixConnectorScript
               datastream << data_in
             end
           end
-        }
+        end
       end
 
       begin
