@@ -11,6 +11,11 @@ GEM
       ast (~> 2.4.1)
     rainbow (3.0.0)
     rake (13.0.3)
+    reek (1.3.7)
+      rainbow
+      ruby2ruby (~> 2.0.8)
+      ruby_parser (~> 3.3)
+      sexp_processor
     rexml (3.2.4)
     rspec (3.10.0)
       rspec-core (~> 3.10.0)
@@ -34,6 +39,12 @@ GEM
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 2.0)
     ruby-progressbar (1.11.0)
+    ruby2ruby (2.0.8)
+      ruby_parser (~> 3.1)
+      sexp_processor (~> 4.0)
+    ruby_parser (3.15.1)
+      sexp_processor (~> 4.9)
+    sexp_processor (4.15.2)
     simplecov (0.17.1)
       docile (~> 1.1)
       json (>= 1.8, < 3)
@@ -48,6 +59,7 @@ PLATFORMS
 
 DEPENDENCIES
   rake
+  reek (~> 1.3)
   rspec
   rspec-mocks
   rubocop (~> 0.81.0)

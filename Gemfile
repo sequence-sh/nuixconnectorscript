@@ -6,3 +6,5 @@ gem 'rspec'
 gem 'rspec-mocks'
 
 gem "rubocop", "~> 0.81.0"
+
+gem "reek", "~> 1.3"
