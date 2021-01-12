@@ -1,4 +1,4 @@
-image: 'ruby:2.3'
+image: 'ruby:2.3.3'
 
 include:
   - template: Code-Quality.gitlab-ci.yml
@@ -14,21 +14,11 @@ workflow:
     - if: $CI_COMMIT_BRANCH !~ /^\d+-/
     - if: $CI_COMMIT_TAG
 
-cache:
-  paths:
-    - vendor/ruby
-
-before_script:
-  - ruby -v
-  - bundle install -j $(nproc) --path vendor
-
-# rubocop:
-#   stage: test
-#   script:
-#     - rubocop
-
 rspec:
   stage: test
+  before_script:
+    - ruby -v
+    - bundle install -j $(nproc) --path vendor
   script:
     - bundle exec rake spec
   coverage: /LOC \((\d+.?\d*)%\) covered/
@@ -41,7 +31,6 @@ rspec:
 code_quality:
   stage: quality
   cache: {}
-  before_script: []
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
     - when: manual
