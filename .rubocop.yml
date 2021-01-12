@@ -1,10 +1,10 @@
-inherit_gem:
-  prettier: rubocop.yml
-
 Layout/EndOfLine:
   Enabled: false
 
 Layout/EmptyLinesAroundBlockBody:
+  Enabled: false
+
+Layout/EmptyLinesAroundModuleBody:
   Enabled: false
 
 Style/FrozenStringLiteralComment:
@@ -15,5 +15,8 @@ Metrics/BlockLength:
     - describe
     - context
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 100
+
+Metrics/ModuleLength:
+  Max: 120
