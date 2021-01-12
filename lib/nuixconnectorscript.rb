@@ -1,20 +1,12 @@
 require 'json'
-require 'thread'
 
 module NuixConnectorScript
 
   class Error < StandardError; end
 
-  END_CMD       = 'done'
-  ENCODING      = 'UTF-8'
+  END_CMD       = 'done'.freeze
+  ENCODING      = 'UTF-8'.freeze
   LOG_SEVERITY  = :info
-  WAIT_TIMEOUT  = 30 #30 Seconds
-
-  #STDIN.sync   = true
-  #STDOUT.sync  = true
-  #STDERR.sync  = true
-
-  ################################################################################
 
   LogSeverity = {
     :fatal => 0,
@@ -57,8 +49,6 @@ module NuixConnectorScript
       body = { :entity => props }
       $stdout.puts JSON.generate(body)
   end
-
-  ################################################################################
 
   def listen()
 
@@ -131,7 +121,7 @@ module NuixConnectorScript
 
       begin
         result = args.nil? ? send(functions[cmd][:fdef]) : send(functions[cmd][:fdef], args)
-        dataInput.join(WAIT_TIMEOUT) if is_stream
+        dataInput.join if is_stream
         return_result(result)
       rescue => ex
         write_error("Could not execute #{cmd}: #{ex}", stack: ex.backtrace.join("\n"), terminating: true)
