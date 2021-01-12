@@ -1,10 +1,15 @@
 source 'https://rubygems.org'
-gem 'simplecov', require: false, group: :test
-gem 'simplecov-cobertura', require: false, group: :test
+
+ruby '2.3.3'
+
 gem 'rake'
+
+gem 'reek', '~> 1.3'
+
 gem 'rspec'
 gem 'rspec-mocks'
 
-gem "rubocop", "~> 0.81.0"
+gem 'rubocop', '~> 0.81.0'
 
-gem "reek", "~> 1.3"
+gem 'simplecov', require: false, group: :test
+gem 'simplecov-cobertura', require: false, group: :test
