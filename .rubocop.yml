@@ -1,22 +1,46 @@
-Layout/EndOfLine:
+Layout/EmptyLinesAroundBlockBody:
   Enabled: false
 
-Layout/EmptyLinesAroundBlockBody:
+Layout/EmptyLinesAroundMethodBody:
   Enabled: false
 
 Layout/EmptyLinesAroundModuleBody:
   Enabled: false
 
-Style/FrozenStringLiteralComment:
+Layout/EndOfLine:
   Enabled: false
+
+Layout/LineLength:
+  Max: 100
+
+# Exclude listen from complexity analysis
+Metrics/AbcSize:
+  IgnoredMethods: ['listen']
+
+Metrics/CyclomaticComplexity:
+  IgnoredMethods: ['listen']
+
+Metrics/MethodLength:
+  IgnoredMethods: ['listen']
+
+Metrics/PerceivedComplexity:
+  IgnoredMethods: ['listen']
+# listen
 
 Metrics/BlockLength:
   ExcludedMethods:
     - describe
     - context
 
-Layout/LineLength:
-  Max: 100
-
 Metrics/ModuleLength:
   Max: 120
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+# This just causes unexpected token tCOLON errors!
+Style/HashSyntax:
+  Enabled: false
+
+Style/StderrPuts:
+  Enabled: false
