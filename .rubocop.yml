@@ -1,3 +1,6 @@
+inherit_gem:
+  prettier: rubocop.yml
+
 Layout/EndOfLine:
   Enabled: false
 
