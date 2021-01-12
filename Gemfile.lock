@@ -1,23 +1,10 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    ast (2.4.1)
     diff-lcs (1.4.4)
     docile (1.3.4)
-    jaro_winkler (1.5.4)
     json (2.5.1)
-    parallel (1.19.2)
-    parser (3.0.0.0)
-      ast (~> 2.4.1)
-    rainbow (2.2.2)
-      rake
     rake (13.0.3)
-    reek (1.4.0)
-      rainbow (>= 1.99, < 3.0)
-      ruby2ruby (>= 2.0.8, < 3.0)
-      ruby_parser (>= 3.5.0, < 4.0)
-      sexp_processor (~> 4.4)
-    rexml (3.2.4)
     rspec (3.10.0)
       rspec-core (~> 3.10.0)
       rspec-expectations (~> 3.10.0)
@@ -31,21 +18,6 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.10.0)
     rspec-support (3.10.1)
-    rubocop (0.81.0)
-      jaro_winkler (~> 1.5.1)
-      parallel (~> 1.10)
-      parser (>= 2.7.0.1)
-      rainbow (>= 2.2.2, < 4.0)
-      rexml
-      ruby-progressbar (~> 1.7)
-      unicode-display_width (>= 1.4.0, < 2.0)
-    ruby-progressbar (1.11.0)
-    ruby2ruby (2.4.4)
-      ruby_parser (~> 3.1)
-      sexp_processor (~> 4.6)
-    ruby_parser (3.15.1)
-      sexp_processor (~> 4.9)
-    sexp_processor (4.15.2)
     simplecov (0.17.1)
       docile (~> 1.1)
       json (>= 1.8, < 3)
@@ -53,17 +25,14 @@ GEM
     simplecov-cobertura (1.4.2)
       simplecov (~> 0.8)
     simplecov-html (0.10.2)
-    unicode-display_width (1.7.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   rake
-  reek (~> 1.3)
   rspec
   rspec-mocks
-  rubocop (~> 0.81.0)
   simplecov
   simplecov-cobertura
 
