@@ -96,7 +96,7 @@ describe 'listen' do
     expect { run_listen }.to output(/^#{expected}$/).to_stdout
   end
 
-  context 'streams' do
+  context 'streams', stream: true do
 
     data_func = '
 def process_stream(args={})
