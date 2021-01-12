@@ -5,9 +5,9 @@ module NuixConnectorScript
 
   class Error < StandardError; end
 
-  END_CMD       = 'done'.freeze
-  ENCODING      = 'UTF-8'.freeze
-  LOG_SEVERITY  = :info
+  END_CMD      = 'done'.freeze
+  ENCODING     = 'UTF-8'.freeze
+  LOG_SEVERITY = :info
 
   LogSeverity = {
     :fatal => 0,
