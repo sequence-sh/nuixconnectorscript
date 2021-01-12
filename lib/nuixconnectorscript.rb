@@ -1,5 +1,6 @@
 require 'json'
 
+# Script to enable execution of ruby funcions in Nuix
 module NuixConnectorScript
 
   class Error < StandardError; end
@@ -15,22 +16,23 @@ module NuixConnectorScript
     :info  => 3,
     :debug => 4,
     :trace => 5
-  }
+  }.freeze
 
   def log(message, severity: :info, timestamp: Time.now, stack: '')
     return unless LogSeverity[severity] <= LogSeverity[LOG_SEVERITY]
+
     body = { :log => {
       :severity => severity.to_s,
       :message => message,
       :time => timestamp,
       :stackTrace => stack
-    }}
+    } }
     $stdout.puts JSON.generate(body)
   end
 
   def return_result(result)
-      body = { :result => { :data => result } }
-      $stdout.puts JSON.generate(body)
+    body = { :result => { :data => result } }
+    $stdout.puts JSON.generate(body)
   end
 
   def write_error(message, timestamp: Time.now, location: '', stack: '', terminating: false)
@@ -39,30 +41,30 @@ module NuixConnectorScript
       :time => timestamp,
       :location => location,
       :stackTrace => stack
-    }}
+    } }
     log(message, severity: :error, timestamp: timestamp, stack: stack)
     $stderr.puts JSON.generate(body)
     exit(1) if terminating
   end
 
   def return_entity(props)
-      body = { :entity => props }
-      $stdout.puts JSON.generate(body)
+    body = { :entity => props }
+    $stdout.puts JSON.generate(body)
   end
 
-  def listen()
+  def listen
 
-    log "Starting"
+    log 'Starting'
 
     functions = {}
 
     loop do
 
-      log("reader: waiting for input", severity: :debug)
+      log('reader: waiting for input', severity: :debug)
 
       input = $stdin.gets.chomp
 
-      log("reader: received input", severity: :debug)
+      log('reader: received input', severity: :debug)
 
       begin
         json = JSON.parse(input)
@@ -93,7 +95,7 @@ module NuixConnectorScript
       end
 
       if is_stream
-        if !functions[cmd][:accepts_stream]
+        unless functions[cmd][:accepts_stream]
           write_error("The function '#{cmd}' does not support data streaming", terminating: true)
         end
         datastream = Queue.new
@@ -102,7 +104,7 @@ module NuixConnectorScript
         else
           args['datastream'] = datastream
         end
-        dataInput = Thread.new do
+        data_input = Thread.new do
           datastream_end = nil
           loop do
             data_in = $stdin.gets.chomp
@@ -121,15 +123,19 @@ module NuixConnectorScript
 
       begin
         result = args.nil? ? send(functions[cmd][:fdef]) : send(functions[cmd][:fdef], args)
-        dataInput.join if is_stream
+        data_input.join if is_stream
         return_result(result)
-      rescue => ex
-        write_error("Could not execute #{cmd}: #{ex}", stack: ex.backtrace.join("\n"), terminating: true)
+      rescue => e
+        write_error(
+          "Could not execute #{cmd}: #{e}",
+          stack: e.backtrace.join("\n"),
+          terminating: true
+        )
       end
 
     end
 
-    log "Finished"
+    log 'Finished'
 
   end
 
