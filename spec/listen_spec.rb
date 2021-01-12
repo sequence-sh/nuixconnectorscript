@@ -15,7 +15,6 @@ describe 'listen' do
   include NuixConnectorScript
 
   DONE_JSON = '{"cmd":"done"}'.freeze
-  DATA_JSON = '{"cmd":"datastream"}'.freeze
 
   LOG_START =
     '\{"log":\{"severity":"info","message":"Starting","time":".+","stackTrace":""\}\}\r?\n'.freeze
@@ -95,6 +94,69 @@ describe 'listen' do
              + '\r?\n' \
              + LOG_END
     expect { run_listen }.to output(/^#{expected}$/).to_stdout
+  end
+
+  context 'streams' do
+
+    data_func = '
+def process_stream(args={})
+  ds = args[\'datastream\']
+  while ds and (!ds.closed? or !ds.empty?)
+    data = ds.pop
+    break if ds.closed? and data.nil?
+    log(\'Received: \' + data)
+  end
+end'.gsub(/\r?\n/, '\\n')
+
+    data_json = "{\"cmd\":\"process_stream\",\"isstream\":true,\"def\":\"#{data_func}\"}"
+
+    it 'redirects stdin to the datastream if isstream is true' do
+      allow($stdin).to receive(:gets).and_return(
+        data_json,
+        'abc-123', # start token
+        'data1',
+        'data2',
+        'abc-123', # end token
+        DONE_JSON
+      )
+      expected = LOG_START \
+               + '\{"log":\{"severity":"info","message":"Received: data1","time":".+","stackTrace":""\}\}\r?\n' \
+               + '\{"log":\{"severity":"info","message":"Received: data2","time":".+","stackTrace":""\}\}\r?\n' \
+               + '\{"result":\{"data":null\}\}\r?\n' \
+               + LOG_END
+      expect { run_listen }.to output(/^#{expected}$/).to_stdout
+    end
+
+    it 'does not redirect stdin if isstream is false' do
+      allow($stdin).to receive(:gets).and_return(
+        data_json,
+        'abc-123', # start token
+        'abc-123', # end token
+        '{"cmd":"process_stream"}',
+        DONE_JSON
+      )
+      expected = LOG_START \
+               + '\{"result":\{"data":null\}\}\r?\n' \
+               + '\{"result":\{"data":null\}\}\r?\n' \
+               + LOG_END
+      expect { run_listen }.to output(/^#{expected}$/).to_stdout
+    end
+
+    it 'uses the existing datastream key in the args' do
+      allow($stdin).to receive(:gets).and_return(
+        "{\"cmd\":\"process_stream\",\"isstream\":true,\"def\":\"#{data_func}\",\"args\":{\"datastream\":\"\"}}",
+        'abc-123', # start token
+        'data1',
+        'abc-123', # end token
+        DONE_JSON
+      )
+      expected = LOG_START \
+               + '\{"log":\{"severity":"info","message":"Received: data1","time":".+","stackTrace":""\}\}\r?\n' \
+               + '\{"result":\{"data":null\}\}\r?\n' \
+               + LOG_END
+      expect { run_listen }.to output(/^#{expected}$/).to_stdout
+    end
+
   end
 
   context 'errors' do
