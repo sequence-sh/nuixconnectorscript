@@ -4,3 +4,5 @@ gem 'simplecov-cobertura', require: false, group: :test
 gem 'rake'
 gem 'rspec'
 gem 'rspec-mocks'
+
+gem "rubocop", "~> 0.81.0"
