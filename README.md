@@ -26,7 +26,8 @@ define new functions or execute existing ones:
   "cmd": "log_msg",
   "isstream": true,
   "def": "def log_msg(args={})\n  m = [args['m1'], args['m2']]\n  log m.join(' ')\nend",
-  "args": { "m1": "hello", "m2": "there!" }
+  "args": { "m1": "hello", "m2": "there!" },
+  "casepath": "C:\\Nuix\\Case"
 }
 ```
 
@@ -36,9 +37,29 @@ define new functions or execute existing ones:
 | isstream  | :white_large_square: | See [streaming data](#streaming-data)                                                                 |
 | def       | :white_large_square: | Function definition. Create new / replace existing function.                                          |
 | args      | :white_large_square: | The arguments to be passed to the function.                                                           |
+| casepath  | :white_large_square: | If set, opens the Nuix case in this path. If another case is opened, closes that case first.          |
 
 The only reserved `cmd` keyword is `END_CMD` which is `done`
 by default. It's used to stop the nuix process: `{"cmd":"done"}`.
+
+### Nuix case - current, open and close
+
+There are two helper functions that can be used to open and close
+Nuix cases:
+
+| Function          | Description                                                                        |
+| :---------------- | :--------------------------------------------------------------------------------- |
+| `open_case(path)` | Opens a case at the given path. If a case is already open, closes that case first. |
+| `close_case`      | Closes `$current_case`. Does nothing if no case is opened.                         |
+
+The currently opened case is tracked in the `$current_case`
+global variable. This variable is set to a `Case` object
+returned by `$utilities.case_factory.open` or `nil` if no
+case is currently opened.
+
+If the `casepath` argument is specified in the command JSON,
+then the script checks if that case is already opened and,
+if not, opens that case.
 
 ### Streaming data
 
