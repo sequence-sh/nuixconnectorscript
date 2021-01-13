@@ -21,20 +21,6 @@ describe 'listen' do
   LOG_END =
     '\{"log":\{"severity":"info","message":"Finished","time":".+","stackTrace":""\}\}\r?\n'.freeze
 
-  # RSpec::Matchers.define_negated_matcher :not_output, :output
-
-  # it 'returns when END_CMD is received' do
-  #   $VERBOSE = nil
-  #   NuixConnectorScript::END_CMD = 'end'
-  #   $VERBOSE = false
-  #   allow($stdin).to receive(:gets) { '{"cmd":"end"}' }
-  #   th = Thread.new {listen}
-  #   result = nil
-  #   expect($stdout).to receive(:puts).twice
-  #   expect{result = th.join(1)}.not_to raise_error
-  #   expect(result).to_not be_nil
-  # end
-
   it 'logs start and end message' do
     allow($stdin).to receive(:gets) { DONE_JSON }
     expected = LOG_START + LOG_END
