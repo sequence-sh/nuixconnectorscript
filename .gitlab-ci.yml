@@ -1,0 +1,37 @@
+image: 'ruby:2.3.3'
+
+include:
+  - template: Code-Quality.gitlab-ci.yml
+
+stages:
+  - test
+  - quality
+
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_MERGE_REQUEST_ID
+    - if: $CI_COMMIT_BRANCH !~ /^\d+-/
+    - if: $CI_COMMIT_TAG
+
+rspec:
+  stage: test
+  before_script:
+    - ruby -v
+    - bundle install -j $(nproc) --path vendor
+  script:
+    - bundle exec rake spec
+  coverage: /LOC \((\d+.?\d*)%\) covered/
+  artifacts:
+    paths:
+      - coverage/
+    reports:
+      cobertura: coverage/coverage.xml
+
+code_quality:
+  stage: quality
+  cache: {}
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - when: manual
+      allow_failure: true
