@@ -12,11 +12,13 @@ module NuixConnectorScript
   LogSeverity = {
     :fatal => 0,
     :error => 1,
-    :warn  => 2,
-    :info  => 3,
+    :warn => 2,
+    :info => 3,
     :debug => 4,
     :trace => 5
   }.freeze
+
+  $current_case = nil
 
   def log(message, severity: :info, timestamp: Time.now, stack: '')
     return unless LogSeverity[severity] <= LogSeverity[LOG_SEVERITY]
@@ -52,6 +54,26 @@ module NuixConnectorScript
     $stdout.puts JSON.generate(body)
   end
 
+  def open_case(path)
+    unless $current_case.nil?
+      return if $current_case.get_location.get_path == path # the case is already open
+
+      log 'Another Case is open'
+      close_case
+    end
+
+    log "Opening case: #{path}"
+    $current_case = $utilities.case_factory.open(path)
+  end
+
+  def close_case
+    return if $current_case.nil?
+
+    log "Closing case: #{$current_case.get_location.get_path}"
+    result = $current_case.close
+    log("Success: #{result}", severity: :debug)
+  end
+
   def listen
 
     log 'Starting'
@@ -80,6 +102,7 @@ module NuixConnectorScript
       args = json['args']
       fdef = json['def']
       is_stream = json['isstream']
+      case_path = json['casepath']
 
       unless fdef.nil?
         op = functions.key?(cmd) ? 'Replacing' : 'Adding new'
@@ -93,6 +116,8 @@ module NuixConnectorScript
       unless functions.key?(cmd)
         write_error("Function definition for '#{cmd}' not found", terminating: true)
       end
+
+      open_case(case_path) unless case_path.nil?
 
       if is_stream
         unless functions[cmd][:accepts_stream]
@@ -135,6 +160,7 @@ module NuixConnectorScript
 
     end
 
+    close_case
     log 'Finished'
 
   end

@@ -21,7 +21,7 @@ Metrics/CyclomaticComplexity:
   IgnoredMethods: ['listen']
 
 Metrics/MethodLength:
-  IgnoredMethods: ['listen']
+  ExcludedMethods: ['listen']
 
 Metrics/PerceivedComplexity:
   IgnoredMethods: ['listen']
@@ -33,9 +33,12 @@ Metrics/BlockLength:
     - context
 
 Metrics/ModuleLength:
-  Max: 120
+  Max: 200
 
 Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/GlobalVars:
   Enabled: false
 
 # This just causes unexpected token tCOLON errors!
