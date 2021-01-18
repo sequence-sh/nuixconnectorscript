@@ -69,8 +69,9 @@ describe 'close_case' do
     expected_log = get_log_rx("Closing case: #{path}")
     $current_case = {}
     allow($current_case).to receive_message_chain(:get_location, :get_path) { path }
-    allow($current_case).to receive(:close) { true }
+    allow($current_case).to receive(:close)
     expect { close_case }.to output(/^#{expected_log}$/).to_stdout
+    expect($current_case).to be_nil
   end
 
 end

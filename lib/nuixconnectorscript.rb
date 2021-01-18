@@ -70,8 +70,8 @@ module NuixConnectorScript
     return if $current_case.nil?
 
     log "Closing case: #{$current_case.get_location.get_path}"
-    result = $current_case.close
-    log("Success: #{result}", severity: :debug)
+    $current_case.close
+    $current_case = nil
   end
 
   def listen
