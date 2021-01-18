@@ -71,6 +71,7 @@ module NuixConnectorScript
 
     log "Closing case: #{$current_case.get_location.get_path}"
     $current_case.close
+    $current_case = nil
   end
 
   def listen
