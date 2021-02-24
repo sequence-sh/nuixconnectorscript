@@ -82,11 +82,11 @@ module NuixConnectorScript
 
     loop do
 
-      log('reader: waiting for input', severity: :debug)
+      log('reader: waiting for input', severity: :trace)
 
       input = $stdin.gets.chomp
 
-      log('reader: received input', severity: :debug)
+      log('reader: received input', severity: :trace)
 
       begin
         json = JSON.parse(input)
