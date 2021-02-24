@@ -13,6 +13,8 @@ end
 describe 'listen' do
 
   include NuixConnectorScript
+  
+  NuixConnectorScript::LOG_SEVERITY = :info
 
   DONE_JSON = '{"cmd":"done"}'.freeze
 
