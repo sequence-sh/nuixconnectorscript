@@ -36,6 +36,14 @@ describe 'open_case' do
     expect($current_case).to eq('new_case')
   end
 
+  it 'ignores path separators' do
+    path = 'c:/Nuix/case'
+    already_open = 'c:\Nuix\case'
+    $current_case = {}
+    allow($current_case).to receive_message_chain(:get_location, :get_path) { already_open }
+    expect { open_case(path) }.not_to output.to_stdout
+  end
+
   it 'closes case if a case is open' do
     path = 'c:/Nuix/case'
     another_case = 'c:/another/case'
