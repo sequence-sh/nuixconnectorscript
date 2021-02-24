@@ -58,7 +58,7 @@ module NuixConnectorScript
     unless $current_case.nil?
       return if $current_case.get_location.get_path.gsub(/\\/, '/') == path.gsub(/\\/, '/')
 
-      log 'Another Case is open'
+      log 'Another Case is open, closing first'
       close_case
     end
 
@@ -82,11 +82,11 @@ module NuixConnectorScript
 
     loop do
 
-      log('reader: waiting for input', severity: :trace)
+      log('NuixConnectorScript waiting for stdin input', severity: :trace)
 
       input = $stdin.gets.chomp
 
-      log('reader: received input', severity: :trace)
+      log('NuixConnectorScript received stdin input', severity: :trace)
 
       begin
         json = JSON.parse(input)
@@ -123,6 +123,7 @@ module NuixConnectorScript
         unless functions[cmd][:accepts_stream]
           write_error("The function '#{cmd}' does not support data streaming", terminating: true)
         end
+        log("Creating datastream for function '#{cmd}'.", severity: :debug)
         datastream = Queue.new
         if args.nil?
           args = { 'datastream' => datastream }
@@ -134,8 +135,10 @@ module NuixConnectorScript
           loop do
             data_in = $stdin.gets.chomp
             if datastream_end.nil?
+              log("Received end of stream token: #{data_in}. Starting stream.", severity: :trace)
               datastream_end = data_in
             elsif datastream_end.eql? data_in
+              log("Received end of stream token: #{data_in}. Ending stream.", severity: :trace)
               datastream.close
               datastream_end = nil
               break
@@ -147,8 +150,13 @@ module NuixConnectorScript
       end
 
       begin
+        log("#{cmd} starting", severity: :debug)
         result = args.nil? ? send(functions[cmd][:fdef]) : send(functions[cmd][:fdef], args)
-        data_input.join if is_stream
+        if is_stream
+          log("Waiting for data stream to finish", severity: :debug)
+          data_input.join
+        end
+        log("#{cmd} finished", severity: :debug)
         return_result(result)
       rescue => e
         write_error(
