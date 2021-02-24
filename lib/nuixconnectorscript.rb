@@ -56,7 +56,7 @@ module NuixConnectorScript
 
   def open_case(path)
     unless $current_case.nil?
-      return if $current_case.get_location.get_path.gsub(/\\/, '/') == path.gsub(/\\/, '/')
+      return if $current_case.get_location.get_path.tr('\\', '/') == path.tr('\\', '/')
 
       log 'Another Case is open, closing first'
       close_case
@@ -153,7 +153,7 @@ module NuixConnectorScript
         log("#{cmd} starting", severity: :debug)
         result = args.nil? ? send(functions[cmd][:fdef]) : send(functions[cmd][:fdef], args)
         if is_stream
-          log("Waiting for data stream to finish", severity: :debug)
+          log('Waiting for data stream to finish', severity: :debug)
           data_input.join
         end
         log("#{cmd} finished", severity: :debug)
