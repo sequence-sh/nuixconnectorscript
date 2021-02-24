@@ -76,7 +76,7 @@ module NuixConnectorScript
 
   def listen
 
-    log 'Starting'
+    log 'NuixConnectorScript starting'
 
     functions = {}
 
@@ -161,7 +161,7 @@ module NuixConnectorScript
     end
 
     close_case
-    log 'Finished'
+    log 'NuixConnectorScript finished'
 
   end
 
