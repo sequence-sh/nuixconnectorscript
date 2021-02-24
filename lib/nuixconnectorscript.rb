@@ -1,6 +1,6 @@
 require 'json'
 
-# Script to enable execution of ruby funcions in Nuix
+# Script to enable execution of ruby functions in Nuix
 module NuixConnectorScript
 
   class Error < StandardError; end
@@ -56,7 +56,7 @@ module NuixConnectorScript
 
   def open_case(path)
     unless $current_case.nil?
-      return if $current_case.get_location.get_path == path # the case is already open
+      return if $current_case.get_location.get_path.gsub(/\\/, '/') == path.gsub(/\\/, '/')
 
       log 'Another Case is open'
       close_case
