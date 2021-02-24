@@ -12,8 +12,7 @@ require 'nuixconnectorscript'
 RSpec::Mocks.configuration.allow_message_expectations_on_nil = true
 
 def get_log_rx(msg)
-  return '\{"log":\{"severity":"info","message":"' + msg \
-         + '","time":".+","stackTrace":""\}\}\r?\n'
+  '\{"log":\{"severity":"info","message":"' + msg + '","time":".+","stackTrace":""\}\}\r?\n'
 end
 
 describe 'open_case' do
