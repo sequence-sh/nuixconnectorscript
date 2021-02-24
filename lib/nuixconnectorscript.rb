@@ -7,7 +7,7 @@ module NuixConnectorScript
 
   END_CMD      = 'done'.freeze
   ENCODING     = 'UTF-8'.freeze
-  LOG_SEVERITY = :info
+  LOG_SEVERITY = :trace
 
   LogSeverity = {
     :fatal => 0,
