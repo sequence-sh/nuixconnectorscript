@@ -47,7 +47,7 @@ describe 'open_case' do
   it 'closes case if a case is open' do
     path = 'c:/Nuix/case'
     another_case = 'c:/another/case'
-    expected_log = get_log_rx('Another Case is open') \
+    expected_log = get_log_rx('Another Case is open, closing first') \
                  + get_log_rx("Closing case: #{another_case}") \
                  + get_log_rx("Opening case: #{path}")
     $current_case = {}
