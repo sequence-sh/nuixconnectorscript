@@ -12,8 +12,7 @@ require 'nuixconnectorscript'
 RSpec::Mocks.configuration.allow_message_expectations_on_nil = true
 
 def get_log_rx(msg)
-  return '\{"log":\{"severity":"info","message":"' + msg \
-         + '","time":".+","stackTrace":""\}\}\r?\n'
+  '\{"log":\{"severity":"info","message":"' + msg + '","time":".+","stackTrace":""\}\}\r?\n'
 end
 
 describe 'open_case' do
@@ -36,10 +35,18 @@ describe 'open_case' do
     expect($current_case).to eq('new_case')
   end
 
+  it 'ignores path separators' do
+    path = 'c:/Nuix/case'
+    already_open = 'c:\Nuix\case'
+    $current_case = {}
+    allow($current_case).to receive_message_chain(:get_location, :get_path) { already_open }
+    expect { open_case(path) }.not_to output.to_stdout
+  end
+
   it 'closes case if a case is open' do
     path = 'c:/Nuix/case'
     another_case = 'c:/another/case'
-    expected_log = get_log_rx('Another Case is open') \
+    expected_log = get_log_rx('Another Case is open, closing first') \
                  + get_log_rx("Closing case: #{another_case}") \
                  + get_log_rx("Opening case: #{path}")
     $current_case = {}

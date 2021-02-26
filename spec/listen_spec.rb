@@ -14,12 +14,14 @@ describe 'listen' do
 
   include NuixConnectorScript
 
+  NuixConnectorScript::LOG_SEVERITY = :info
+
   DONE_JSON = '{"cmd":"done"}'.freeze
 
   LOG_START =
-    '\{"log":\{"severity":"info","message":"Starting","time":".+","stackTrace":""\}\}\r?\n'.freeze
+    '\{"log":\{"severity":"info","message":"NuixConnectorScript starting","time":".+","stackTrace":""\}\}\r?\n'.freeze
   LOG_END =
-    '\{"log":\{"severity":"info","message":"Finished","time":".+","stackTrace":""\}\}\r?\n'.freeze
+    '\{"log":\{"severity":"info","message":"NuixConnectorScript finished","time":".+","stackTrace":""\}\}\r?\n'.freeze
 
   it 'logs start and end message' do
     allow($stdin).to receive(:gets) { DONE_JSON }
