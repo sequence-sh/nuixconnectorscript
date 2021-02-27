@@ -135,10 +135,8 @@ module NuixConnectorScript
           loop do
             data_in = $stdin.gets.chomp
             if datastream_end.nil?
-              log("Received end of stream token: #{data_in}. Starting stream.", severity: :trace)
               datastream_end = data_in
             elsif datastream_end.eql? data_in
-              log("Received end of stream token: #{data_in}. Ending stream.", severity: :trace)
               datastream.close
               datastream_end = nil
               break
