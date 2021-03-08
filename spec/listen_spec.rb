@@ -43,7 +43,9 @@ describe 'listen' do
       '{"cmd":"helper","def":"def helper\n  log \'hello\'\nend", "ishelper": true}',
       DONE_JSON
     )
-    expected = LOG_START + LOG_END
+    expected = LOG_START + \
+             + '\{"result":\{"data":"helper_success"\}\}\r?\n' \
+             + LOG_END
     expect { run_listen }.to output(/^#{expected}$/).to_stdout
   end
 
@@ -54,6 +56,7 @@ describe 'listen' do
       DONE_JSON
     )
     expected = LOG_START \
+             + '\{"result":\{"data":"helper_success"\}\}\r?\n' \
              + '\{"log":\{"severity":"info","message":"hello","time":".+","stackTrace":""\}\}\r?\n' \
              + '\{"result":\{"data":null\}\}\r?\n' \
              + LOG_END
