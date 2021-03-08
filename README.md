@@ -24,6 +24,7 @@ define new functions or execute existing ones:
 ```json
 {
   "cmd": "log_msg",
+  "ishelper": false,
   "isstream": true,
   "def": "def log_msg(args={})\n  m = [args['m1'], args['m2']]\n  log m.join(' ')\nend",
   "args": { "m1": "hello", "m2": "there!" },
@@ -34,6 +35,7 @@ define new functions or execute existing ones:
 | Parameter |       Required       | Description                                                                                           |
 | :-------- | :------------------: | :---------------------------------------------------------------------------------------------------- |
 | cmd       |  :white_check_mark:  | The name of the function. Used to execute an existing function if no function definition is provided. |
+| ishelper  | :white_large_square: | See [helper functions](#helper-functions)                                                             |
 | isstream  | :white_large_square: | See [streaming data](#streaming-data)                                                                 |
 | def       | :white_large_square: | Function definition. Create new / replace existing function.                                          |
 | args      | :white_large_square: | The arguments to be passed to the function.                                                           |
@@ -60,6 +62,26 @@ case is currently opened.
 If the `casepath` argument is specified in the command JSON,
 then the script checks if that case is already opened and,
 if not, opens that case.
+
+### Helper Functions
+
+When `ishelper` is set to `true` the function definition
+is evaluated but not run. This makes the function available
+to any other function.
+
+For example, sending the following two commands:
+
+```json
+{"cmd":"helper","def":"def helper\n  log \'hello\'\nend", "ishelper": true}
+{"cmd":"run_helper","def":"def run_helper(args={})\n  helper\nend"}
+```
+
+Results in the following output:
+
+```json
+{"log":{"severity":"info","message":"hello","time":"...","stackTrace":""}}
+{"result":{"data":null}}
+```
 
 ### Streaming data
 
