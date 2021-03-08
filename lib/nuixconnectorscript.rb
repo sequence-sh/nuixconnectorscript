@@ -119,6 +119,7 @@ module NuixConnectorScript
           write_error("Helper '#{cmd}' must have a function definition", terminating: true)
         end
         log("Added helper function '#{cmd}'. Continuing.", severity: :debug)
+        return_result('helper_success')
         next
       end
 
