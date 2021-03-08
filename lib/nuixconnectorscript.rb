@@ -103,6 +103,7 @@ module NuixConnectorScript
       fdef = json['def']
       is_stream = json['isstream']
       case_path = json['casepath']
+      is_helper = json['ishelper']
 
       unless fdef.nil?
         op = functions.key?(cmd) ? 'Replacing' : 'Adding new'
@@ -111,6 +112,14 @@ module NuixConnectorScript
           :accepts_stream => true,
           :fdef => eval(fdef)
         }
+      end
+
+      if is_helper
+        if fdef.nil?
+          write_error("Helper '#{cmd}' must have a function definition", terminating: true)
+        end
+        log("Added helper function '#{cmd}'. Continuing.", severity: :debug)
+        next
       end
 
       unless functions.key?(cmd)
