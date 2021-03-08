@@ -38,6 +38,28 @@ describe 'listen' do
     expect { run_listen }.to output(/^#{expected}$/).to_stdout
   end
 
+  it 'evals helper functions but does not run' do
+    allow($stdin).to receive(:gets).twice.and_return(
+      '{"cmd":"helper","def":"def helper\n  log \'hello\'\nend", "ishelper": true}',
+      DONE_JSON
+    )
+    expected = LOG_START + LOG_END
+    expect { run_listen }.to output(/^#{expected}$/).to_stdout
+  end
+
+  it 'makes helper functions available in subsequent functions' do
+    allow($stdin).to receive(:gets).exactly(3).and_return(
+      '{"cmd":"helper","def":"def helper\n  log \'hello\'\nend", "ishelper": true}',
+      '{"cmd":"run_helper","def":"def run_helper(args={})\n  helper\nend"}',
+      DONE_JSON
+    )
+    expected = LOG_START \
+             + '\{"log":\{"severity":"info","message":"hello","time":".+","stackTrace":""\}\}\r?\n' \
+             + '\{"result":\{"data":null\}\}\r?\n' \
+             + LOG_END
+    expect { run_listen }.to output(/^#{expected}$/).to_stdout
+  end
+
   it 'uses stored def to run same function' do
     allow($stdin).to receive(:gets).exactly(3).and_return(
       '{"cmd":"get_result","def":"def get_result\n  return \'hi\'\nend"}',
@@ -158,6 +180,20 @@ end'.gsub(/\r?\n/, '\\n')
       expected_log = Regexp.escape('{"log":{"severity":"error","message":"Could not parse JSON:')
       expect { run_listen }.to output(/^#{expected_err}/).to_stderr.and \
         output(/^#{expected_log}/).to_stdout
+    end
+
+    it "writes error when a helper has no function definition, and terminates" do
+      allow($stdin).to receive(:gets).once.and_return(
+        '{"cmd":"unknown","ishelper":true}'
+      )
+      expected_err = Regexp.escape(
+        '{"error":{"message":"Helper \'unknown\' must have a function definition"'
+      )
+      expected_log = Regexp.escape(
+        '{"log":{"severity":"error","message":"Helper \'unknown\' must have a function definition'
+      )
+      expect { run_listen }.to output(/^#{expected_err}/).to_stderr.and \
+        output(/^#{expected_log}/).to_stdout.and raise_error(SystemExit)
     end
 
     it "writes error when it can't find a function definition, and terminates" do
