@@ -1,9 +1,11 @@
-/label ~"bug::possible" 
-/label ~"severity::3" 
-/label ~"priority::3" 
-/label ~"wf::backlog" 
-/label ~"area::connectors" 
-/label ~nuix 
+/label ~"bug::possible"
+/label ~"severity::3"
+/label ~"priority::3"
+/label ~"wf::backlog"
+/label ~"area::connectors"
+/label ~nuix
+/label ~sequence
+
 ## Summary
 
 Concise description of the bug.
@@ -32,7 +34,7 @@ Here's a screenshot: ![image](https://gitlab.com/reductech/templates/dotnetlibra
 
 Link to the line of code that's causing the behaviour.
 
------
+---
 
 > **Everything below here can and should be deleted.**
 
