@@ -9,7 +9,7 @@ execute commands or scripts, and stream data back.
 To run:
 
 ```powershell
-& 'C:\Program Files\Nuix\Nuix 8.8\nuix_console.exe' -licencesourcetype dongle C:\Scripts\nuixconnectorscript\lib\nuixconnectorscript.rb
+& 'C:\Program Files\Nuix\Nuix 9.0\nuix_console.exe' -licencesourcetype dongle C:\Scripts\nuixconnectorscript\lib\nuixconnectorscript.rb
 ```
 
 Stdin/out is used to write to/from nuix.
