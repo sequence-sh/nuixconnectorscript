@@ -30,6 +30,8 @@ rspec:
 
 code_quality:
   stage: quality
+  tags:
+    - rt-dind
   cache: {}
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
