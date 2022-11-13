@@ -23,10 +23,10 @@ rspec:
     - bundle exec rake spec
   coverage: /LOC \((\d+.?\d*)%\) covered/
   artifacts:
-    paths:
-      - coverage/
     reports:
-      cobertura: coverage/coverage.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/coverage.xml
 
 code_quality:
   stage: quality
